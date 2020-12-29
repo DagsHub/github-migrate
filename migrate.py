@@ -1,4 +1,5 @@
 import requests
+import os
 
 
 def migrate_github_to_dagshub(
@@ -29,11 +30,11 @@ def migrate_github_to_dagshub(
     :param github_pass: If the repository on GitHub is private, supply your GitHub password.
     :return: http response for the migration request (201 if successful)
     """
-    api_url = dagshub_url + "/api/v1/"
+    api_url = os.path.join(dagshub_url, "api", "v1")
     if is_org:
-        res = requests.get(api_url + "orgs/" + dagshub_owner_name).json()
+        res = requests.get(os.path.join(api_url, "orgs" + dagshub_owner_name)).json()
     else:
-        res = requests.get(api_url + "users/" + dagshub_owner_name).json()
+        res = requests.get(os.path.join(api_url, "users", dagshub_owner_name)).json()
     owner_id = res['id']
     auth_header = {"Authorization": "token " + dagshub_token}
     # Adding must have attributes to migrate request
@@ -47,6 +48,5 @@ def migrate_github_to_dagshub(
     if github_user and github_pass:
         payload["auth_username"] = github_user
         payload["auth_password"] = github_pass
-    res = requests.post(api_url + "repos/migrate", data=payload, headers=auth_header)
+    res = requests.post(os.path.join(api_url, "repos", "migrate"), data=payload, headers=auth_header)
     return res
-
