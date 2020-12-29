@@ -32,7 +32,7 @@ def migrate_github_to_dagshub(
     """
     api_url = os.path.join(dagshub_url, "api", "v1")
     if is_org:
-        res = requests.get(os.path.join(api_url, "orgs" + dagshub_owner_name)).json()
+        res = requests.get(os.path.join(api_url, "orgs", dagshub_owner_name)).json()
     else:
         res = requests.get(os.path.join(api_url, "users", dagshub_owner_name)).json()
     owner_id = res['id']
